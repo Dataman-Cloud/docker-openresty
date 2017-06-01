@@ -1,0 +1,15 @@
+[Unit]
+
+Description=SRV router load balancer
+Requires=multiuser.target
+
+[Service]
+
+Restart=always
+RestartSec=5
+ExecStartPre=-/usr/bin/docker rm -f srv-router
+ExecStart=/usr/bin/bash -l -c 'exec docker run --net host -t --name srv-router -e  "DOMAINS=example.com" vlipco/srv-router'
+
+[Install]
+
+WantedBy=multiuser.target

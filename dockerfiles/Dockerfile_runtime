@@ -1,0 +1,21 @@
+FROM demoregistry.dataman-inc.com/library/centos7-base
+MAINTAINER zpang@dataman-inc.com
+
+ADD misc/ngx_openresty-1.7.2.1.tar.gz /openresty
+ADD conf /nginx/conf
+
+ENV LC_ALL C
+RUN yum install -y perl pcre-dev pcre-devel openssl-devel gcc
+RUN yum groupinstall "Development Tools" -y
+RUN cd /openresty/ngx_openresty-1.7.2.1 && \
+            ./configure && \
+	     make install && \
+            ln -s /usr/local/openresty/nginx/sbin/nginx /usr/bin/nginx && \
+            mkdir /nginx/logs
+
+ENV NS_IP 127.0.0.1
+ENV NS_PORT 53
+ENV TARGET swan.com
+ENV DOMAINS dev 
+
+CMD ["/usr/bin/nginx", "-p", "/nginx/", "-c", "conf/nginx.conf"]
